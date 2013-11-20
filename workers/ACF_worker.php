@@ -44,7 +44,7 @@ class acf_Worker extends Worker
 			$fieldGroupsInFile[] = $fromFile["post"]["post_name"];
 
 			if (is_null($fromDb["post"])) {
-				WP_CLI::warning("Group `{$fromFile['post']['post_title']}` does not exist in the database, created.");
+				WP_CLI::success("Group `{$fromFile['post']['post_title']}` does not exist in the database, created.");
 				$this->createFieldGroup($fromFile["post"], $fromFile["meta"]);
 				continue;
 			}
