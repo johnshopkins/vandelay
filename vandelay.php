@@ -6,14 +6,15 @@ Author: Jen Wachter
 Version: 0.1
 */
 
+$path = plugin_dir_path(__FILE__);
 
 if ( defined("WP_CLI") && WP_CLI ) {
-	include __DIR__ . "/Worker.php";
-	include __DIR__ . "/VandelayCommand.php";
+	include $path . "VandelayCommand.php";
+	include $path . "workers/Worker.php";
 
 	// load the workers
-	$files = array_diff(scandir(__DIR__ . "/workers"), array("..", "."));
+	$files = array_diff(scandir($path. "workers"), array("..", "."));
 	foreach ($files as $file) {
-		include_once "workers/{$file}";
+		include_once $path . "workers/{$file}";
 	}
 }
