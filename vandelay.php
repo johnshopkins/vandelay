@@ -13,6 +13,10 @@ if (defined("WP_CLI") && WP_CLI) {
 }
 
 
+// default config dir
+add_option("vandelay_config_url", plugin_dir_path(__FILE__) . "/config");
+
+
 
 // vandelay page
 $menuPage = new vandelay\helpers\settings\SubMenuPage(

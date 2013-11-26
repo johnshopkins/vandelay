@@ -5,7 +5,6 @@ return array(
 	"url" => array(
 		"type" => "text",
 		"label" => "Configuration Directory (absolute)",
-		"default" => dirname(plugin_dir_path(__FILE__)),
 		"validation" => function ($input) {
 			$file = $input . "/test.json";
 			$fopen = fopen($file, "w");
