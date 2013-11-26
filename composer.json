@@ -1,6 +1,11 @@
 {
     "name": "johnshopkins/vandelay",
     "type": "wordpress-plugin",
+    "autoload": {
+        "psr-0": {
+            "vandelay": "src/"
+        }
+    },
     "require": {
         "composer/installers": "~1.0"
     }

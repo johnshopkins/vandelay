@@ -1,6 +1,8 @@
 <?php
 
-class acf_Worker extends Worker
+namespace vandelay\commands\sub;
+
+class Acf extends Command
 {
 	protected $config_file = "advanced_custom_forms.json";
 
@@ -44,24 +46,24 @@ class acf_Worker extends Worker
 			$fieldGroupsInFile[] = $fromFile["post"]["post_name"];
 
 			if (is_null($fromDb["post"])) {
-				WP_CLI::success("Group `{$fromFile['post']['post_title']}` does not exist in the database, created.");
+				\WP_CLI::success("Group `{$fromFile['post']['post_title']}` does not exist in the database, created.");
 				$this->createFieldGroup($fromFile["post"], $fromFile["meta"]);
 				continue;
 			}
 
 			if ($fromDb["post"]["post_modified_gmt"] !== $fromFile["post"]["post_modified_gmt"]) {
-				WP_CLI::warning("Group `{$fromFile['post']['post_title']}` changed since last import, updating.");
+				\WP_CLI::warning("Group `{$fromFile['post']['post_title']}` changed since last import, updating.");
 				$this->updateFieldGroup($fromDb["post"]["ID"], $fromDb["meta"], $fromFile["post"], $fromFile["meta"]);
 				continue;
 			}
 
-			WP_CLI::warning("Group `{$fromFile['post']['post_title']}` did not change since last import, skipping.");
+			\WP_CLI::warning("Group `{$fromFile['post']['post_title']}` did not change since last import, skipping.");
 
 		}
 
 		$this->deleteGroupsNotInFile($fieldGroupsInFile);	
 
-		WP_CLI::success("ACF field groups successfully imported.");
+		\WP_CLI::success("ACF field groups successfully imported.");
 	}
 	
 	/**
