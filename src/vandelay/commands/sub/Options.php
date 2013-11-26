@@ -1,6 +1,8 @@
 <?php
 
-class options_Worker extends Worker
+namespace vandelay\commands\sub;
+
+class Options extends Command
 {
 	protected $config_file = "wp_options.json";
 
@@ -33,7 +35,7 @@ class options_Worker extends Worker
 		foreach ($data as $k => $v) {
 			update_option($k, $v);
 		}
-		WP_CLI::success("WordPress options successfully imported.");
+		\WP_CLI::success("WordPress options successfully imported.");
 	}
 	
 }
