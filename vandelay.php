@@ -28,26 +28,28 @@ add_action("admin_menu", function() {
 });
 
 function vandelay_options_display() {  
-?>  
-    <!-- Create a header in the default WordPress 'wrap' container -->  
-    <div class="wrap">  
-      
-        <div id="icon-themes" class="icon32"></div>  
-        <h2>Vandelay Options</h2>  
-        <?php settings_errors(); ?>  
-          
-        <form method="post" action="options.php">  
-  
-            <?php settings_fields( 'vandelay' ); ?>  
-            <?php do_settings_sections( 'vandelay' ); ?>   
-          
-            <?php submit_button(); ?>  
-              
-        </form>  
-          
-    </div><!-- /.wrap -->  
+?>
+    <div class="wrap">
+
+        <?php screen_icon(); ?>
+        <h2>Vandelay Options</h2>
+        <?php settings_errors(); ?>
+
+        <form method="post" action="options.php">
+
+            <?php settings_fields("vandelay"); ?>
+            <?php do_settings_sections("vandelay"); ?>
+            <?php submit_button(); ?>
+
+        </form>
+
+    </div>
 <?php  
 }
+
+
+// load form helpers
+include_once $path . "forms.php";
 
 
 // load settings
