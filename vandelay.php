@@ -6,45 +6,69 @@ Author: Jen Wachter
 Version: 0.1
 */
 
-$path = plugin_dir_path(__FILE__);
 
+// load vandelay command
 if (defined("WP_CLI") && WP_CLI) {
-    WP_CLI::add_command("vandelay", "\\vandelay\\Vandelay");
+    WP_CLI::add_command("vandelay", "\\vandelay\\commands\\Vandelay");
 }
 
 
-// create vandelay settings page
-add_action("admin_menu", function() {
-	add_submenu_page("options-general.php", "Vandelay options", "Vandelay", "activate_plugins", "vandelay", "vandelay_options_display");
-});
 
-function vandelay_options_display() {  
-?>
-    <div class="wrap">
+// vandelay page
+$menuPage = new vandelay\helpers\settings\SubMenuPage(
+	"options-general.php",
+	"Vandelay Options",
+	"Vandelay",
+	"activate_plugins",
+	"vandelay"
+);
 
-        <?php screen_icon(); ?>
-        <h2>Vandelay Options</h2>
-        <?php settings_errors(); ?>
 
-        <form method="post" action="options.php">
+// configuration section
+$config = include __DIR__ . "/fields/config.php";
+$configSection = new vandelay\helpers\settings\Section(
+	$menuPage,
+	"config",
+	"Configuration"
+);
+vandelay_create_fields($config, $menuPage, $configSection);
 
-            <?php settings_fields("vandelay"); ?>
-            <?php do_settings_sections("vandelay"); ?>
-            <?php submit_button(); ?>
 
-        </form>
+// wp options section
+$wpoptions = include __DIR__ . "/fields/wpoptions.php";
+$wpoptionsSection = new vandelay\helpers\settings\Section(
+	$menuPage,
+	"wp_options",
+	"WordPress Options"
+);
+vandelay_create_fields($wpoptions, $menuPage, $wpoptionsSection);
 
-    </div>
-<?php  
+
+
+
+function vandelay_create_fields($fields, $page, $section)
+{
+	foreach ($fields as $machinename => $details) {
+
+		// this field has subfields
+		if (isset($details["fields"])) {
+			new vandelay\helpers\settings\FieldGroup(
+				$machinename,
+				$details["label"],
+				$details["fields"],
+				$page,
+				$section
+			);
+		} else {
+			$default = isset($details["default"]) ? $details["default"] : null;
+			new vandelay\helpers\settings\Field(
+				$details["type"],
+				$machinename,
+				$details["label"],
+				$default,
+				$page,
+				$section
+			);
+		}
 }
-
-
-// load form helpers
-include_once $path . "forms.php";
-
-
-// load settings
-$files = array_diff(scandir($path. "settings"), array("..", "."));
-foreach ($files as $file) {
-	include_once $path . "settings/{$file}";
 }
