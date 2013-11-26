@@ -45,18 +45,25 @@ class FieldGroup
 	protected $section;
 
 	/**
+	 * Validation function
+	 * @var function
+	 */
+	protected $validation;
+
+	/**
 	 * ID of this field group
 	 * @var sting
 	 */
 	protected $id;
 
-	public function __construct($machinename, $title, $fields, $page, $section)
+	public function __construct($machinename, $title, $fields, $page, $section, $validation = null)
 	{
 		$this->machinename = $machinename;
 		$this->title = $title;
 		$this->fields = $fields;
 		$this->page = $page->id;
 		$this->section = $section->id;
+		$this->validation = $validation;
 
 		$this->id = "{$this->section}_{$this->machinename}";
 
@@ -74,7 +81,7 @@ class FieldGroup
 		    array($this->title, $this->fields)  
 		);
 
-		register_setting($this->page, $this->id);
+		register_setting($this->page, $this->id, $this->validation);
 	}
 
 	public function printFields($args)

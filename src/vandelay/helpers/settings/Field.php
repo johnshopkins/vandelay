@@ -52,12 +52,18 @@ class Field
 	protected $section;
 
 	/**
+	 * Validation function
+	 * @var function
+	 */
+	protected $validation;
+
+	/**
 	 * ID of this field group
 	 * @var sting
 	 */
 	public $id;
 
-	public function __construct($type, $machinename, $title, $default, $page, $section)
+	public function __construct($type, $machinename, $title, $default, $page, $section, $validation = null)
 	{
 		$this->type = $type;
 		$this->machinename = $machinename;
@@ -65,6 +71,7 @@ class Field
 		$this->default = $default;
 		$this->page = $page->id;
 		$this->section = $section->id;
+		$this->validation = $validation;
 
 		$this->id = "{$this->section}_{$this->machinename}";
 
@@ -83,7 +90,7 @@ class Field
 		    array($this->type, $this->default)  
 		);
 
-		register_setting($this->page, $this->id);
+		register_setting($this->page, $this->id, $this->validation);
 	}
 
 	public function printField($args)

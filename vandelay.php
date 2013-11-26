@@ -50,6 +50,8 @@ function vandelay_create_fields($fields, $page, $section)
 {
 	foreach ($fields as $machinename => $details) {
 
+		$validation = isset($details["validation"]) ? $details["validation"] : null;
+
 		// this field has subfields
 		if (isset($details["fields"])) {
 			new vandelay\helpers\settings\FieldGroup(
@@ -57,7 +59,8 @@ function vandelay_create_fields($fields, $page, $section)
 				$details["label"],
 				$details["fields"],
 				$page,
-				$section
+				$section,
+				$validation
 			);
 		} else {
 			$default = isset($details["default"]) ? $details["default"] : null;
@@ -67,7 +70,8 @@ function vandelay_create_fields($fields, $page, $section)
 				$details["label"],
 				$default,
 				$page,
-				$section
+				$section,
+				$validation
 			);
 		}
 }
