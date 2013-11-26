@@ -35,7 +35,7 @@ class Command
 			\WP_CLI::error("A configuration file for this action has not been set.");
 		}
 
-		return $this->config_dir . $this->config_file;
+		return $this->config_dir . "/" . $this->config_file;
 	}
 
 	/**
