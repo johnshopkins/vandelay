@@ -74,5 +74,5 @@ function vandelay_create_fields($fields, $page, $section)
 				$validation
 			);
 		}
-}
+	}
 }
