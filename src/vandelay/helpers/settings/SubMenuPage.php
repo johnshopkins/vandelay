@@ -55,7 +55,6 @@ class SubMenuPage
 	        <?php screen_icon(); ?>
 	        <h2><?php echo $this->pageTitle; ?></h2>
 	        <?php echo $this->content; ?>
-	        <?php settings_errors(); ?>
 
 	        <form method="post" action="options.php">
 
