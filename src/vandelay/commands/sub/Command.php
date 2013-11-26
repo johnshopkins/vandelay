@@ -20,7 +20,7 @@ class Command
 
 	public function __construct()
 	{
-		$this->config_dir = "/var/www/htmnl/jhu.edu/config/wordpress/";
+		$this->config_dir = get_option("vandelay_config_url");
 	}
 
 	/**
