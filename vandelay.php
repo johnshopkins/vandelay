@@ -7,14 +7,37 @@ Version: 0.1
 */
 
 
+/**
+ * Activate plugin
+ * @return null
+ */
+function vandelay_activate()
+{
+	add_option("vandelay_config_url", plugin_dir_path(__FILE__) . "config");
+}
+register_activation_hook(__FILE__, "vandelay_activate");
+
+
+/**
+ * Deactivate plugin
+ * @return null
+ */
+function vandelay_deactivate()
+{
+			
+}
+register_deactivation_hook(__FILE__, "vandelay_deactivate");
+
+
+
+
+
+
 // load vandelay command
 if (defined("WP_CLI") && WP_CLI) {
     WP_CLI::add_command("vandelay", "\\vandelay\\commands\\Vandelay");
 }
 
-
-// default config dir
-add_option("vandelay_config_url", plugin_dir_path(__FILE__) . "config");
 
 
 
