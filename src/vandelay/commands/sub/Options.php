@@ -237,12 +237,12 @@ class Options extends Command
 	 */
 	public function import()
 	{
-		$options = $this->getSelectedOptions();
+		// $options = $this->getSelectedOptions();
 		$data = $this->readConfig();
 		foreach ($data as $k => $v) {
-			if (in_array($k, $options)) {
+			// if (in_array($k, $options)) {
 				update_option($k, $v);
-			}
+			// }
 		}
 		\WP_CLI::success("WordPress options successfully imported.");
 	}
