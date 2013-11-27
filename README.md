@@ -1,18 +1,23 @@
 Vandelay
 ========
 
-A simple options importer/exporter plugin for WordPress.
+A simple options importer/exporter plugin for WordPress. Settings currently available for import/export are:
+
+* [WordPress options](http://codex.wordpress.org/Options_API)
+* [Advanced Custom Fields](http://www.advancedcustomfields.com/) field groups
 
 ## Why?
 
 When you're developing WordPress across multiple environments, it's important to manage the options. This is an attempt to keep options in sync across environments.
 
+## Setup
+
+1. Install and activate the plugin on all environments whose settings need to be synced.
+1. Go to Settings > Vandelay on each environment and make sure the directory in which to keep configuration files is the same. This is the directory in which Vandelay saves exported options and looks for options to import.
+1. Go to Settings > Vandelay on whatever environment you will be exporting settings from (probably your development environment) and check which settings you want to export.
+
+
 ## Usage
-
-Settings available for export/import are:
-
-* [WordPress options](http://codex.wordpress.org/Options_API)
-* [Advanced Custom Fields](http://www.advancedcustomfields.com/) field groups
 
 ### Export
 

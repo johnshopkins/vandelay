@@ -4,7 +4,7 @@ return array(
 
 	"url" => array(
 		"type" => "text",
-		"label" => "Configuration Directory (absolute)",
+		"label" => "Directory to keep config files (absolute)",
 		"validation" => function ($input) {
 
 			// make sure there is not a slash at the end
