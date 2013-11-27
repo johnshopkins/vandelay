@@ -85,35 +85,6 @@ class Options extends Command
 			)
 		),
 
-		"media" => array(
-			"large_size_h", 					// height of large image size
-			"large_size_w", 					// width of large image size
-			"medium_size_h", 					// height of medium image size
-			"medium_size_w", 					// width of medium image size
-			"thumbnail_crop", 					// on/off
-			"thumbnail_size_h", 
-			"thumbnail_size_w",
-			"uploads_use_yearmonth_folders", 	// Organize upload yes/no
-			"upload_path",						// Supposed to store upload path, yet nothing is here
-			"upload_url_path",					// URL path to the upload folder, yet nothing is here
-			"image_default_align",
-			"image_default_link_type",
-			"image_default_size"
-		),
-
-		
-
-		"reading" => array(
-			"blog_public",						// whether or not your blog is accessible by search engines
-			"default_pingback_flag",			// whether sites you link to are pinged when you publish an article -- depends on blog_public
-			"posts_per_page",
-			"posts_per_rss",
-			"rss_use_excerpt",
-			"show_on_front",					// what to show on the front page -- page or posts
-			"page_on_front",	 				// "Front page"	the id of the page that should be displayed on the front page
-			"page_for_posts"	 				// "Posts page"	id of the page that displays posts. Useful when the fronpage displays posts (show_on_front = page)
-		),
-
 		"writing" => array(
 			"general" => array(
 				"default_category",			// ID of the category that posts will be put in automatically
@@ -152,7 +123,35 @@ class Options extends Command
 				"links_recently_updated_time",
 				"links_updated_date_format",
 				"link_manager_enabled"
-			)
+			),
+			"media" => array(
+				"large_size_h", 					// height of large image size
+				"large_size_w", 					// width of large image size
+				"medium_size_h", 					// height of medium image size
+				"medium_size_w", 					// width of medium image size
+				"thumbnail_crop", 					// on/off
+				"thumbnail_size_h", 
+				"thumbnail_size_w",
+				"uploads_use_yearmonth_folders", 	// Organize upload yes/no
+				"upload_path",						// Supposed to store upload path, yet nothing is here
+				"upload_url_path",					// URL path to the upload folder, yet nothing is here
+				"image_default_align",
+				"image_default_link_type",
+				"image_default_size"
+			),
+
+			
+
+			"reading" => array(
+				"blog_public",						// whether or not your blog is accessible by search engines
+				"default_pingback_flag",			// whether sites you link to are pinged when you publish an article -- depends on blog_public
+				"posts_per_page",
+				"posts_per_rss",
+				"rss_use_excerpt",
+				"show_on_front",					// what to show on the front page -- page or posts
+				"page_on_front",	 				// "Front page"	the id of the page that should be displayed on the front page
+				"page_for_posts"	 				// "Posts page"	id of the page that displays posts. Useful when the fronpage displays posts (show_on_front = page)
+			),
 		)
 	);
 	
