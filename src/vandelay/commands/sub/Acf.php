@@ -15,7 +15,15 @@ class Acf extends Command
 		$this->deleteAcfAutoDrafts();
 
 		$saveConfig = array();
-		foreach ($this->getFieldGroups() as $post) {
+
+		$fieldGroups = $this->getFieldGroups();
+
+		if (!$fieldGroups) {
+			\WP_CLI::warning("No field groups are selected for import/export. Go to Settings > Vandelay to select field groups for import/export.");
+			return;
+		}
+
+		foreach ($fieldGroups as $post) {
 			$saveConfig[] = array(
 				"post" => get_object_vars($post),
 				"meta" => $this->getPostMeta($post->ID)
@@ -65,6 +73,24 @@ class Acf extends Command
 
 		\WP_CLI::success("ACF field groups successfully imported.");
 	}
+
+	/**
+	 * Get the field groups selected in the admin
+	 * @return array
+	 */
+	protected function getSelectedFieldGroups()
+	{
+		global $wpdb;
+		$groups = $wpdb->get_results("SELECT option_name, option_value FROM wp_options WHERE option_name = 'vandelay_acf_field_groups'", ARRAY_A);
+
+		if (!$groups) {
+			return false;
+		}
+
+		$groups = array_pop($groups);
+		$groups = maybe_unserialize($groups["option_value"]);
+		return array_keys($groups);
+	}
 	
 	/**
 	 * Retrieve advanced custom forms
@@ -73,11 +99,22 @@ class Acf extends Command
 	 */
 	protected function getFieldGroups()
 	{
-		return get_posts(array(
+		// get groups selected in the admin
+		$groups = $this->getSelectedFieldGroups();
+
+		// get all groups
+		$field_groups = get_posts(array(
 			"posts_per_page" => -1,
 			"post_type" => "acf",
 			"post_status" => "publish"
 		));
+
+		// keep only selected field groups
+		$field_groups = array_map(function ($v) use ($groups) {
+			return in_array($v->post_name, $groups) ? $v : null;
+		}, $field_groups);
+
+		return array_filter($field_groups);
 	}
 
 	/**
