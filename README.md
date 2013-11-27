@@ -14,7 +14,7 @@ When you're developing WordPress across multiple environments, it's important to
 
 1. Install and activate the plugin on all environments whose settings need to be synced.
 1. Go to Settings > Vandelay on each environment and make sure the directory in which to keep configuration files is the same. This is the directory in which Vandelay saves exported options and looks for options to import.
-1. Go to Settings > Vandelay on whatever environment you will be exporting settings from (probably your development environment) and check which settings you want to export.
+1. Go to Settings > Vandelay on whichever environment you will be exporting settings from (probably your development environment) and check which settings you want to export.
 
 
 ## Usage
