@@ -7,6 +7,7 @@
         }
     },
     "require": {
-        "composer/installers": "~1.0"
+        "composer/installers": "~1.0",
+        "rhumsaa/array_column": "~1.1"
     }
 }
