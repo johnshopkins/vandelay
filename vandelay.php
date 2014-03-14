@@ -71,16 +71,16 @@ $wpoptionsSection = new vandelay\helpers\settings\Section(
 vandelay_create_fields($wpoptions, $menuPage, $wpoptionsSection);
 
 
-// acf section
-$acf = include __DIR__ . "/fields/acf.php";
-if ($acf) {
-	$acfSection = new vandelay\helpers\settings\Section(
-		$menuPage,
-		"acf",
-		"Advanced Custom Fields"
-	);
-	vandelay_create_fields($acf, $menuPage, $acfSection);
-}
+// // acf section
+// $acf = include __DIR__ . "/fields/acf.php";
+// if ($acf) {
+// 	$acfSection = new vandelay\helpers\settings\Section(
+// 		$menuPage,
+// 		"acf",
+// 		"Advanced Custom Fields"
+// 	);
+// 	vandelay_create_fields($acf, $menuPage, $acfSection);
+// }
 
 
 

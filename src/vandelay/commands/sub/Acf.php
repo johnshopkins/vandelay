@@ -78,20 +78,20 @@ class Acf extends Command
 	 * Get the field groups selected in the admin
 	 * @return array
 	 */
-	protected function getSelectedFieldGroups()
-	{
-		global $wpdb;
-		$groups = $wpdb->get_results("SELECT option_name, option_value FROM wp_options WHERE option_name = 'vandelay_acf_field_groups'", ARRAY_A);
+	// protected function getSelectedFieldGroups()
+	// {
+	// 	global $wpdb;
+	// 	$groups = $wpdb->get_results("SELECT option_name, option_value FROM wp_options WHERE option_name = 'vandelay_acf_field_groups'", ARRAY_A);
 
-		$groups = array_pop($groups);
+	// 	$groups = array_pop($groups);
 
-		if (!$groups["option_value"]) {
-			return false;
-		}
+	// 	if (!$groups["option_value"]) {
+	// 		return false;
+	// 	}
 
-		$groups = maybe_unserialize($groups["option_value"]);
-		return array_keys($groups);
-	}
+	// 	$groups = maybe_unserialize($groups["option_value"]);
+	// 	return array_keys($groups);
+	// }
 	
 	/**
 	 * Retrieve advanced custom forms
@@ -100,12 +100,12 @@ class Acf extends Command
 	 */
 	protected function getFieldGroups()
 	{
-		// get groups selected in the admin
-		$groups = $this->getSelectedFieldGroups();
+		// // get groups selected in the admin
+		// $groups = $this->getSelectedFieldGroups();
 
-		if (!$groups) {
-			return array();
-		}
+		// if (!$groups) {
+		// 	return array();
+		// }
 
 		// get all groups
 		$field_groups = get_posts(array(
@@ -115,9 +115,9 @@ class Acf extends Command
 		));
 
 		// keep only selected field groups
-		$field_groups = array_map(function ($v) use ($groups) {
-			return in_array($v->post_name, $groups) ? $v : null;
-		}, $field_groups);
+		// $field_groups = array_map(function ($v) use ($groups) {
+		// 	return in_array($v->post_name, $groups) ? $v : null;
+		// }, $field_groups);
 
 		return array_filter($field_groups);
 	}
