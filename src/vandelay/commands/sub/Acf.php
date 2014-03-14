@@ -83,11 +83,12 @@ class Acf extends Command
 		global $wpdb;
 		$groups = $wpdb->get_results("SELECT option_name, option_value FROM wp_options WHERE option_name = 'vandelay_acf_field_groups'", ARRAY_A);
 
-		if (!$groups) {
+		$groups = array_pop($groups);
+
+		if (!$groups["option_value"]) {
 			return false;
 		}
 
-		$groups = array_pop($groups);
 		$groups = maybe_unserialize($groups["option_value"]);
 		return array_keys($groups);
 	}
@@ -101,6 +102,10 @@ class Acf extends Command
 	{
 		// get groups selected in the admin
 		$groups = $this->getSelectedFieldGroups();
+
+		if (!$groups) {
+			return array();
+		}
 
 		// get all groups
 		$field_groups = get_posts(array(
@@ -242,6 +247,7 @@ class Acf extends Command
 		}, $this->getFieldGroups());
 
 		$diff = array_diff($fieldGroupsInDb, $groupsInFile);
+		
 		foreach ($diff as $name) {
 			$this->deleteFieldGroupByName($name);
 		}
