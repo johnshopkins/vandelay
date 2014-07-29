@@ -20,7 +20,7 @@ class Command
 
 	public function __construct()
 	{
-		$this->config_dir = get_option("vandelay_config_url");
+		$this->config_dir = defined("VANDELAY_CONFIG_DIR") ? VANDELAY_CONFIG_DIR : get_option("vandelay_config_url");
 	}
 
 	/**
