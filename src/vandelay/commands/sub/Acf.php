@@ -28,6 +28,7 @@ class Acf extends Command
 				"post" => get_object_vars($post),
 				"meta" => $this->getPostMeta($post->ID)
 			);
+
 		}
 
 		$this->saveConfig($saveConfig);
@@ -42,7 +43,7 @@ class Acf extends Command
 		// get rid of any ACF field groups that are not published - if an unpublished
 		// ACF field group has the same name as one we're trying to import, it will fail
 		$this->deleteUnpublished();
-		
+
 		$data = $this->readConfig();
 		$fieldGroupsInFile = array();
 
@@ -65,11 +66,11 @@ class Acf extends Command
 				continue;
 			}
 
-			\WP_CLI::warning("Group `{$fromFile['post']['post_title']}` did not change since last import, skipping.");
+			// \WP_CLI::warning("Group `{$fromFile['post']['post_title']}` did not change since last import, skipping.");
 
 		}
 
-		$this->deleteGroupsNotInFile($fieldGroupsInFile);	
+		$this->deleteGroupsNotInFile($fieldGroupsInFile);
 
 		\WP_CLI::success("ACF field groups successfully imported.");
 	}
@@ -92,7 +93,7 @@ class Acf extends Command
 	// 	$groups = maybe_unserialize($groups["option_value"]);
 	// 	return array_keys($groups);
 	// }
-	
+
 	/**
 	 * Retrieve advanced custom forms
 	 * field groups from the database.
@@ -134,7 +135,7 @@ class Acf extends Command
 		$posts = get_posts(array(
 			"post_type" => "acf",
 			"posts_per_page" => 1,
-			"name" => $name 
+			"name" => $name
 		));
 		return array_shift($posts);
 	}
@@ -159,7 +160,7 @@ class Acf extends Command
 			"meta" => $meta
 		);
 	}
-	
+
 	/**
 	 * Return meta data from a given post
 	 * @param  obejct $post Post object
@@ -168,7 +169,8 @@ class Acf extends Command
 	protected function getPostMeta($id)
 	{
 		$meta = get_post_meta($id);
-		
+
+
 		$meta = array_map(function($value) {
 
 			if (count($value) > 1) {
@@ -247,7 +249,7 @@ class Acf extends Command
 		}, $this->getFieldGroups());
 
 		$diff = array_diff($fieldGroupsInDb, $groupsInFile);
-		
+
 		foreach ($diff as $name) {
 			$this->deleteFieldGroupByName($name);
 		}
@@ -258,7 +260,7 @@ class Acf extends Command
 		global $wpdb;
 		$wpdb->delete("wp_posts", array(
 			"post_type" => "acf",
-			"post_name" => $name 
+			"post_name" => $name
 		));
 	}
 
@@ -301,7 +303,7 @@ class Acf extends Command
 		// set the modified date to the date found in the config
 		$this->updateModifiedDate($id, $newpost);
 	}
-	
+
 	/**
 	 * Update the meta data of a post
 	 * @param  int   $id   ID of post to update
@@ -321,12 +323,12 @@ class Acf extends Command
 
 	/**
 	 * Updates the modified date of a post.
-	 * 
+	 *
 	 * When a post is created or updated, WordPress updates the post's
 	 * modified date based when it creates or updates the post. Vandelay
 	 * tracks changes based on the modified date, so it must be
 	 * changed to the date found in the configuration.
-	 * 
+	 *
 	 * @param  int 		$id            	ID of new post
 	 * @param  object 	$postDataToUse 	Post data to use
 	 * @return null
