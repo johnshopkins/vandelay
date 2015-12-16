@@ -12,6 +12,10 @@ class Acf extends Command
 	 */
 	public function export()
 	{
+		$test = new \acf_settings_tools();
+		var_dump($test); die();
+		die();
+
 		$this->deleteAcfAutoDrafts();
 
 		$saveConfig = array();
