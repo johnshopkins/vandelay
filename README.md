@@ -6,10 +6,10 @@ An [Advanced Custom Fields](http://www.advancedcustomfields.com/) field groups i
 ## Setup
 
 1. Install and activate the plugin on all environments whose settings need to be synced.
-1. Set the directory in which settings are saved on each environment (often the same location). Example:
+1. Set the file in which settings are saved on each environment (often the same location). Example:
 
 ```php
-define('VANDELAY_CONFIG_DIR', '/var/www/html/config');
+define('VANDELAY_CONFIG_FILE', '/var/www/html/config/acf.json');
 ```
 
 
@@ -18,11 +18,11 @@ define('VANDELAY_CONFIG_DIR', '/var/www/html/config');
 ### Export
 
 ```bash
-wp vandelay export acf
+wp vandelay export
 ```
 
 ### Import
 
 ```bash
-wp vandelay import acf
+wp vandelay import
 ```
