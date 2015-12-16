@@ -10,6 +10,7 @@ class Vandelay extends \WP_CLI_Command
 	{
 		parent::__construct();
 
+
 		if (!defined("VANDELAY_CONFIG_FILE")) {
 			WP_CLI::error("Please set configuration file using VANDELAY_CONFIG_FILE constant");
 		}
