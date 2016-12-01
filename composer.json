@@ -1,13 +1,13 @@
 {
-    "name": "johnshopkins/vandelay",
-    "type": "wordpress-plugin",
-    "autoload": {
-        "psr-0": {
-            "vandelay": "src/"
-        }
-    },
-    "require": {
-        "composer/installers": "~1.0",
-        "rhumsaa/array_column": "~1.1"
+  "name": "johnshopkins/vandelay",
+  "type": "wordpress-plugin",
+  "autoload": {
+    "psr-4": {
+      "vandelay\\": [ "src/" ]
     }
+  },
+  "require": {
+    "composer/installers": "~1.0",
+    "ramsey/array_column": "~1.1"
+  }
 }
