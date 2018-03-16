@@ -8,18 +8,7 @@ class Vandelay extends \WP_CLI_Command
 {
   public function getFileLocation()
   {
-    $this->const = 'VANDELAY_CONFIG_FILE';
-
-    if (is_multisite()) {
-      global $blog_id;
-      $this->const .= '_' . $blog_id;
-    }
-
-		if (!defined($this->const)) {
-			WP_CLI::error('Please set configuration file using '. $this->const . ' constant');
-		}
-
-    return constant($this->const);
+    return get_template_directory() . '/config/acf.json';
   }
 
 	/**
@@ -344,7 +333,7 @@ class Vandelay extends \WP_CLI_Command
 		if ($put) {
 			\WP_CLI::success("ACF settings were successfully exported.");
 		} else {
-			\WP_CLI::error("Something went wrong while trying to write to the config file. Please make sure " . $this->const . " is writable by WP CLI.");
+			\WP_CLI::error("Something went wrong while trying to write to the config file. Please make sure " . $location . " is writable by WP CLI.");
 		}
 	}
 }
