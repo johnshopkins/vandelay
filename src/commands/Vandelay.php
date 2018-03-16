@@ -6,14 +6,10 @@ use WP_CLI;
 
 class Vandelay extends \WP_CLI_Command
 {
-	public function __construct()
-	{
-		parent::__construct();
-
-		if (!defined("VANDELAY_CONFIG_FILE")) {
-			WP_CLI::error("Please set configuration file using VANDELAY_CONFIG_FILE constant");
-		}
-	}
+  public function getFileLocation()
+  {
+    return get_template_directory() . '/config/acf.json';
+  }
 
 	/**
 	 * Use an ACF function to export field groups
@@ -29,7 +25,7 @@ class Vandelay extends \WP_CLI_Command
 		$_POST["acf_export_keys"] = $this->getFieldGroupNames();
 
 		$data = $tools->get_json();
-		$this->saveConfig($data);
+		$this->saveConfig($data, $this->getFileLocation());
 	}
 
 	/**
@@ -38,11 +34,13 @@ class Vandelay extends \WP_CLI_Command
 	 */
 	public function import()
 	{
+    $fileLocation = $this->getFileLocation();
+
 		// create files variable for ACF function
 		$_FILES = array(
 			"acf_import_file" => array(
-				"name" => VANDELAY_CONFIG_FILE,
-				"tmp_name" => VANDELAY_CONFIG_FILE,
+				"name" => $fileLocation,
+				"tmp_name" => $fileLocation,
 				"error" => false
 			)
 		);
@@ -324,17 +322,18 @@ class Vandelay extends \WP_CLI_Command
 
 	/**
 	 * Save configuration to a file
-	 * @param  array $data Array of data
+	 * @param  array  $data      Array of data
+	 * @param  string $location  File location
 	 * @return null
 	 */
-	protected function saveConfig($data)
+	protected function saveConfig($data, $location)
 	{
-		$put = file_put_contents(VANDELAY_CONFIG_FILE, json_encode($data, JSON_PRETTY_PRINT));
+		$put = file_put_contents($location, json_encode($data, JSON_PRETTY_PRINT));
 
 		if ($put) {
 			\WP_CLI::success("ACF settings were successfully exported.");
 		} else {
-			\WP_CLI::error("Something went wrong while trying to write to the config file. Please make sure `{VANDELAY_CONFIG_DIR}` is writable by WP CLI.");
+			\WP_CLI::error("Something went wrong while trying to write to the config file. Please make sure " . $location . " is writable by WP CLI.");
 		}
 	}
 }
