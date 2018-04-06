@@ -15,8 +15,15 @@ class Vandelay extends \WP_CLI_Command
 	 * Use an ACF function to export field groups
 	 * @return null
 	 */
-	public function export()
+	public function export($args)
 	{
+    if (is_multisite()) {
+      if (empty($args)) {
+        \WP_CLI::error('Please specify a blog ID');
+      }
+      switch_to_blog($args[0]);
+    }
+
 		// include ACF file needed for export
 		acf_include("admin/settings-tools.php");
 		$tools = new \acf_settings_tools();
@@ -26,14 +33,23 @@ class Vandelay extends \WP_CLI_Command
 
 		$data = $tools->get_json();
 		$this->saveConfig($data, $this->getFileLocation());
+
+    restore_current_blog();
 	}
 
 	/**
 	 * Imports ACF field groups from file to database
 	 * @return null
 	 */
-	public function import()
+	public function import($args)
 	{
+    if (is_multisite()) {
+      if (empty($args)) {
+        \WP_CLI::error('Please specify a blog ID');
+      }
+      switch_to_blog($args[0]);
+    }
+
     $fileLocation = $this->getFileLocation();
 
 		// create files variable for ACF function
@@ -46,6 +62,8 @@ class Vandelay extends \WP_CLI_Command
 		);
 
 		$this->importFields();
+
+    restore_current_blog();
 	}
 
 	/*
