@@ -84,7 +84,7 @@ class Vandelay extends \WP_CLI_Command
 		$posts = get_posts(array(
 			"posts_per_page" => -1,
 			"post_type" => "acf-field-group",
-			"post_status" => "publish"
+			"post_status" => "any"
 		));
 
 		$return = array();
@@ -111,7 +111,7 @@ class Vandelay extends \WP_CLI_Command
 		$posts = get_posts(array(
 			"posts_per_page" => -1,
 			"post_type" => "acf-field",
-			"post_status" => "publish"
+			"post_status" => "any"
 		));
 
 		$return = array();
@@ -333,7 +333,7 @@ class Vandelay extends \WP_CLI_Command
 		$posts = get_posts(array(
 			"posts_per_page" => -1,
 			"post_type" => "acf-field-group",
-			"post_status" => "all"
+			"post_status" => "any"
 		));
 
 		return array_map(function ($post) {
