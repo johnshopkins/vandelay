@@ -25,13 +25,16 @@ class Vandelay extends \WP_CLI_Command
     }
 
 		// include ACF file needed for export
-		acf_include("admin/settings-tools.php");
-		$tools = new \acf_settings_tools();
+    acf_include('includes/admin/admin-tools.php');
+    acf_include('includes/admin/tools/class-acf-admin-tool.php');
+    acf_include('includes/admin/tools/class-acf-admin-tool-export.php');
+    // acf_include('includes/admin/tools/class-acf-admin-tool-import.php');
+		$exporter = new \ACF_Admin_Tool_Export();
 
 		// create post variable for ACF function
-		$_POST["acf_export_keys"] = $this->getFieldGroupNames();
+		$_POST['keys'] = $this->getFieldGroupNames();
 
-		$data = $tools->get_json();
+		$data = $exporter->get_selected();
 		$this->saveConfig($data, $this->getFileLocation());
 
     restore_current_blog();
@@ -330,6 +333,7 @@ class Vandelay extends \WP_CLI_Command
 		$posts = get_posts(array(
 			"posts_per_page" => -1,
 			"post_type" => "acf-field-group",
+			// "post_status" => "all"
 			"post_status" => "publish"
 		));
 
