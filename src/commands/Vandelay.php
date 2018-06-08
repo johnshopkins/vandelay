@@ -6,6 +6,12 @@ use WP_CLI;
 
 class Vandelay extends \WP_CLI_Command
 {
+  public function __construct()
+  {
+    acf_include('includes/admin/admin-tools.php');
+    acf_include('includes/admin/tools/class-acf-admin-tool.php');
+  }
+
   public function getFileLocation()
   {
     return get_template_directory() . '/config/acf.json';
@@ -25,10 +31,8 @@ class Vandelay extends \WP_CLI_Command
     }
 
 		// include ACF file needed for export
-    acf_include('includes/admin/admin-tools.php');
-    acf_include('includes/admin/tools/class-acf-admin-tool.php');
+
     acf_include('includes/admin/tools/class-acf-admin-tool-export.php');
-    // acf_include('includes/admin/tools/class-acf-admin-tool-import.php');
 		$exporter = new \ACF_Admin_Tool_Export();
 
 		// create post variable for ACF function
@@ -53,16 +57,7 @@ class Vandelay extends \WP_CLI_Command
       switch_to_blog($args[0]);
     }
 
-    $fileLocation = $this->getFileLocation();
-
-		// create files variable for ACF function
-		$_FILES = array(
-			"acf_import_file" => array(
-				"name" => $fileLocation,
-				"tmp_name" => $fileLocation,
-				"error" => false
-			)
-		);
+    // acf_include('includes/admin/tools/class-acf-admin-tool-import.php');
 
 		$this->importFields();
 
@@ -138,194 +133,48 @@ class Vandelay extends \WP_CLI_Command
 	 */
 	protected function importFields() {
 
-		// validate
-		if( empty($_FILES['acf_import_file']) ) {
-
-			acf_add_admin_notice( __("No file selected", 'acf') , 'error');
-			return;
-
-		}
-
-
-		// vars
-		$file = $_FILES['acf_import_file'];
-
-
-		// validate error
-		if( $file['error'] ) {
-
-			acf_add_admin_notice(__('Error uploading file. Please try again', 'acf'), 'error');
-			return;
-
-		}
-
-
-		// validate type
-		if( pathinfo($file['name'], PATHINFO_EXTENSION) !== 'json' ) {
-
-			acf_add_admin_notice(__('Incorrect file type', 'acf'), 'error');
-			return;
-
-		}
-
-
 		// read file
-		$json = file_get_contents( $file['tmp_name'] );
+		$json = file_get_contents($this->getFileLocation());
 
 
 		// decode json
 		$json = json_decode($json, true);
 
 
-		// validate json
-    	if( empty($json) ) {
+  	// vars
+  	$ref = [];
+  	$order = [];
 
-    		acf_add_admin_notice(__('Import file empty', 'acf'), 'error');
-	    	return;
+    // all groups and fields curerntly in the db
+  	$allgroups = $this->getFieldGroups();
+  	$allfields = $this->getFields();
 
-    	}
+  	foreach( $json as $field_group ) {
 
+			$update = false;
 
-    	// if importing an auto-json, wrap field group in array
-    	if( isset($json['key']) ) {
+    	// check if field group exists
+    	if ($post = _acf_get_field_group_by_key($field_group['key'])) {
 
-	    	$json = array( $json );
+				// add ID to trigger update instead of insert
+				$field_group['ID'] = $post['ID'];
 
-    	}
+				$update = true;
+			} else {
+        $field_group['ID'] = null;
+      }
 
-
-    	// vars
-    	$added = array();
-    	$deletedgroups = array();
-    	$deletedfields = array();
-    	$ref = array();
-    	$order = array();
-
-    	$allgroups = $this->getFieldGroups();
-    	$allfields = $this->getFields();
-
-    	foreach( $json as $field_group ) {
-
-				$update = false;
-
-	    	// check if field group exists
-	    	if( $post = acf_get_field_group($field_group['key'], true) ) {
-
-					// \WP_CLI::log($field_group['title'] . " group already exists. Updating.");
-
-					// add ID to trigger update instead of insert
-					$field_group["ID"] = $post["ID"];
-
-					$update = true;
-
-	    	// } else {
-				// 	\WP_CLI::log($field_group['title'] . " group is new. Adding.");
-				}
+			// save field group
+			$field_group = acf_import_field_group($field_group);
 
 
-	    	// remove fields
-				$fields = acf_extract_var($field_group, 'fields');
-
-
-				// format fields
-				$fields = acf_prepare_fields_for_import( $fields );
-
-
-				// save field group
-				$field_group = acf_update_field_group( $field_group );
-
-
-				// remove group from $allgroups array
-				if (isset($allgroups[$field_group['ID']])) {
-					unset($allgroups[$field_group['ID']]);
-				}
-
-
-				// add to ref
-				$ref[ $field_group['key'] ] = $field_group['ID'];
-
-
-				// add to order
-				$order[ $field_group['ID'] ] = 0;
-
-
-				// add fields
-				foreach( $fields as $field ) {
-
-					// add parent
-					if( empty($field['parent']) ) {
-
-						$field['parent'] = $field_group['ID'];
-
-					} elseif( isset($ref[ $field['parent'] ]) ) {
-
-						$field['parent'] = $ref[ $field['parent'] ];
-
-					}
-
-
-					// add field menu_order
-					if( !isset($order[ $field['parent'] ]) ) {
-
-						$order[ $field['parent'] ] = 0;
-
-					}
-
-					$field['menu_order'] = $order[ $field['parent'] ];
-					$order[ $field['parent'] ]++;
-
-
-					// add ID if the field already exists
-					if($post = acf_get_field($field['key'], true) ) {
-
-						// add ID to trigger update instead of insert
-						$field["ID"] = $post["ID"];
-
-						// \WP_CLI::log($field_group['title'] . "->" . $field['label'] . " field already exists. Updating.");
-
-
-					// } else {
-					// 	\WP_CLI::log($field_group['title'] . "->" . $field['label'] . " field is new. Adding.");
-					}
-
-
-					// save field
-					$field = acf_update_field( $field );
-
-
-					// remove field from allfields array
-					if (isset($allfields[$field['ID']])) {
-						unset($allfields[$field['ID']]);
-					}
-
-
-					// add to ref
-					$ref[ $field['key'] ] = $field['ID'];
-
-				}
-
-				if ($update) {
-					\WP_CLI::success($field_group['title'] . " field group updated.");
-				} else {
-					\WP_CLI::success($field_group['title'] . " field group added.");
-				}
-
-    	}
-
-			if (!empty($allgroups)) {
-				foreach ($allgroups as $post) {
-					\WP_CLI::success($post->post_title . " field group deleted.");
-					wp_delete_post($post->ID);
-				}
+			if ($update) {
+				\WP_CLI::success($field_group['title'] . " field group updated.");
+			} else {
+				\WP_CLI::success($field_group['title'] . " field group added.");
 			}
 
-			if (!empty($allfields)) {
-				foreach ($allfields as $post) {
-					\WP_CLI::success($post->post_title . " field deleted.");
-					wp_delete_post($post->ID);
-				}
-			}
-
+  	}
 	}
 
 	protected function getFieldGroupNames()
