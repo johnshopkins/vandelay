@@ -30,8 +30,10 @@ class Vandelay extends \WP_CLI_Command
       switch_to_blog($args[0]);
     }
 
-		// include ACF file needed for export
+		// disable filters (default to raw data)
+		acf_disable_filters();
 
+		// include ACF file needed for export
     acf_include('includes/admin/tools/class-acf-admin-tool-export.php');
 		$exporter = new \ACF_Admin_Tool_Export();
 
@@ -39,6 +41,7 @@ class Vandelay extends \WP_CLI_Command
 		$_POST['keys'] = $this->getFieldGroupNames();
 
 		$data = $exporter->get_selected();
+
 		$this->saveConfig($data, $this->getFileLocation());
 
     restore_current_blog();
