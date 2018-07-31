@@ -167,9 +167,18 @@ class Vandelay extends \WP_CLI_Command
         $field_group['ID'] = null;
       }
 
+      if (defined(ENV) && ENV === 'local') {
+        // turn of lower-errors while ACF functions run (they throw notices)
+        $current = error_reporting();
+        error_reporting('E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED');
+      }
+
 			// save field group
 			$field_group = acf_import_field_group($field_group);
 
+      if (defined(ENV) && ENV === 'local') {
+        error_reporting($current);
+      }
 
 			if ($update) {
 				\WP_CLI::success($field_group['title'] . " field group updated.");
