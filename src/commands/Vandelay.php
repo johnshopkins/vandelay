@@ -14,7 +14,7 @@ class Vandelay extends \WP_CLI_Command
 
   public function getFileLocation()
   {
-    return get_template_directory() . '/config/acf.json';
+    return get_stylesheet_directory() . '/config/acf.json';
   }
 
   /**
