@@ -67,6 +67,46 @@ class Vandelay extends \WP_CLI_Command
     restore_current_blog();
   }
 
+  /**
+   * Imports ACF field groups from file to database
+   * @return null
+   */
+  public function build($args)
+  {
+    if (is_multisite()) {
+      if (empty($args)) {
+        \WP_CLI::error('Please specify a blog ID');
+      }
+      switch_to_blog($args[0]);
+    }
+
+    $files = json_decode(file_get_contents(get_stylesheet_directory() . '/config/acf-build.json'));
+
+    $data = $this->buildFields($files);
+
+    $this->saveConfig($data, $this->getFileLocation());
+
+    restore_current_blog();
+  }
+
+  protected function buildFields($files)
+  {
+    $data = [];
+
+    $configPath = get_template_directory() . '/config/acf/';
+
+    foreach ($files as $file) {
+
+      $filePath = $configPath . $file . '.json';
+      if (file_exists($filePath)) {
+        $fileData = file_get_contents($filePath);
+        $data[] = json_decode(file_get_contents($filePath));
+      }
+    }
+
+    return $data;
+  }
+
   /*
   *  getFields
   *
