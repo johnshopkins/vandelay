@@ -93,14 +93,19 @@ class Vandelay extends \WP_CLI_Command
   {
     $data = [];
 
-    $configPath = get_template_directory() . '/config/acf/';
+    $dirs = [
+      get_stylesheet_directory() . '/config/acf/',
+      get_template_directory() . '/config/acf/'
+    ];
 
     foreach ($files as $file) {
-
-      $filePath = $configPath . $file . '.json';
-      if (file_exists($filePath)) {
-        $fileData = file_get_contents($filePath);
-        $data[] = json_decode(file_get_contents($filePath));
+      foreach ($dirs as $dir) {
+        $filePath = $dir . $file . '.json';
+        if (file_exists($filePath)) {
+          $fileData = file_get_contents($filePath);
+          $data[] = json_decode(file_get_contents($filePath));
+          break;
+        }
       }
     }
 
