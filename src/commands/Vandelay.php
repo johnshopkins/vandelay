@@ -94,8 +94,9 @@ class Vandelay extends \WP_CLI_Command
     $data = [];
 
     $dirs = [
-      get_stylesheet_directory() . '/config/acf/',
-      get_template_directory() . '/config/acf/'
+      get_stylesheet_directory() . '/config/acf/', // child theme
+      get_template_directory() . '/config/acf/',   // parent theme
+      get_theme_root() . '/shared/config/acf/'     // shared theme
     ];
 
     foreach ($files as $file) {
