@@ -103,8 +103,16 @@ class Vandelay extends \WP_CLI_Command
       foreach ($dirs as $dir) {
         $filePath = $dir . $file . '.json';
         if (file_exists($filePath)) {
-          $fileData = file_get_contents($filePath);
-          $data[] = json_decode(file_get_contents($filePath));
+          $fileData = json_decode(file_get_contents($filePath));
+
+          if (is_object($fileData)) {
+            $data[] = $fileData;
+          } else if (is_array($fileData)) {
+            foreach ($fileData as $d) {
+              $data[] = $d;
+            }
+          }
+
           break;
         }
       }
