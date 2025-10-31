@@ -84,7 +84,7 @@ class Vandelay extends \WP_CLI_Command
 
     $data = $this->buildFields($files);
 
-    $this->saveConfig($data, $this->getFileLocation());
+    $this->saveConfig($data, $this->getFileLocation(), true);
 
     restore_current_blog();
   }
@@ -262,12 +262,14 @@ class Vandelay extends \WP_CLI_Command
    * @param  string $location  File location
    * @return null
    */
-  protected function saveConfig($data, $location)
+  protected function saveConfig($data, $location, $built = false)
   {
     $put = file_put_contents($location, json_encode($data, JSON_PRETTY_PRINT));
 
     if ($put) {
-      \WP_CLI::success("ACF settings were successfully exported.");
+      $siteName = get_bloginfo('name');
+      $verb = $built ? 'built' : 'exported';
+      \WP_CLI::success("{$siteName} ACF settings were successfully {$verb}.");
     } else {
       \WP_CLI::error("Something went wrong while trying to write to the config file. Please make sure " . $location . " is writable by WP CLI.");
     }
